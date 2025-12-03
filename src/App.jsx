@@ -145,19 +145,16 @@ function App() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
 
         <div className="absolute inset-0 flex flex-col justify-between">
-          {/* Top bar */}
-<div className="flex items-center justify-between px-6 md:px-10 pt-4">
-  <div className="flex items-center gap-2">
-    <img
-      src={logo}
-      alt="GROW logo"
-      className="h-8 w-8 rounded-full bg-white/80 p-1 object-contain"
-    />
-    <span className="text-sm font-semibold tracking-wide text-white/90 uppercase">
-      GROW
-    </span>
-  </div>
+         {/* Top bar */}
+<div className="flex items-center justify-end px-6 md:px-10 pt-4">
+  <img
+    src={logo}
+    alt="GROW logo"
+    className="h-20 w-20 rounded-full bg-white/90 p-3 shadow-xl object-contain"
+  />
 </div>
+
+
 
 
           {/* Hero content */}
