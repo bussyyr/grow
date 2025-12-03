@@ -134,7 +134,7 @@ function App() {
   return (
     <div className="min-h-screen bg-white text-slate-900">
       {/* HERO SECTION */}
-      <header className="relative h-[70vh] w-full overflow-hidden">
+      <header className="relative h-screen w-full overflow-hidden">
         <img
           src={heroImg}
           alt="Building and rooftop"
