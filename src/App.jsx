@@ -1,68 +1,103 @@
 // src/App.jsx
 import { useState } from "react";
-import { suggestionData } from "./data";
 import heroImg from "./assets/hero-building.jpeg";
 
-const countryOptions = [
-  { value: "germany", label: "Germany" },
-  { value: "iceland", label: "Iceland" },
-  { value: "czech", label: "Czech" },
+const spaceOptions = [
+  { value: "roof", label: "Roof" },
+  { value: "balcony", label: "Balcony" },
+  { value: "terrace", label: "Terrace" },
+  { value: "yard", label: "Yard" },
+  { value: "basement", label: "Basement" },
 ];
 
-const roofOptions = [
-  { value: "flat", label: "Flat roof" },
-  { value: "pitched", label: "Pitched roof" },
+const materialOptions = [
+  { value: "asphalt_shingles", label: "Asphalt shingles" },
+  { value: "metal", label: "Metal" },
+  { value: "clay_tiles", label: "Clay tiles" },
+  { value: "concrete_tiles", label: "Concrete tiles" },
 ];
 
-const wallOptions = [
-  { value: "brick", label: "Brick wall" },
-  { value: "wood", label: "Wood wall" },
+const shapeOptions = [
+  { value: "gable", label: "Gable" },
+  { value: "flat", label: "Flat" },
+  { value: "shed", label: "Shed" },
+  { value: "pyramid", label: "Pyramid" },
+];
+
+const pitchOptions = [
+  { value: "low", label: "Low" },
+  { value: "conventional", label: "Conventional" },
+  { value: "steep", label: "Steep" },
+];
+
+const newsItems = [
+  {
+    title: "Cities push for rooftop solar to cut CO₂ emissions",
+    summary:
+      "Several European cities are expanding incentives for solar installations on existing roofs to accelerate decarbonisation.",
+    source: "Energy Today",
+  },
+  {
+    title: "Green roofs improve urban climate resilience",
+    summary:
+      "New studies show that green roofs help reduce heat islands and manage stormwater in dense city districts.",
+    source: "Climate Insights",
+  },
+  {
+    title: "Home retrofits become key in reaching 2030 targets",
+    summary:
+      "Policy makers highlight building envelopes and unused spaces as a major lever for CO₂ savings in the residential sector.",
+    source: "Sustainable Future",
+  },
 ];
 
 function App() {
-  const [country, setCountry] = useState("");
-  const [roofType, setRoofType] = useState("");
-  const [wallType, setWallType] = useState("");
+  const [spaceType, setSpaceType] = useState("");
+  const [roofMaterial, setRoofMaterial] = useState("");
+  const [roofShape, setRoofShape] = useState("");
+  const [roofPitch, setRoofPitch] = useState("");
   const [result, setResult] = useState("");
   const [error, setError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!country || !roofType || !wallType) {
+    if (!spaceType || !roofMaterial || !roofShape || !roofPitch) {
       setResult("");
-      setError("Please select country, roof type and wall type.");
+      setError("Please fill in all fields before sending.");
       return;
     }
 
-    const suggestion =
-      suggestionData[country]?.[roofType]?.[wallType] ??
-      "No suggestion found for this combination in the data.";
+    const readableSpace = spaceOptions.find((o) => o.value === spaceType)?.label;
+    const readableMaterial = materialOptions.find(
+      (o) => o.value === roofMaterial
+    )?.label;
+    const readableShape = shapeOptions.find((o) => o.value === roofShape)?.label;
+    const readablePitch = pitchOptions.find((o) => o.value === roofPitch)?.label;
+
+    const suggestion = `Based on your ${readableSpace?.toLowerCase()} with a ${readablePitch?.toLowerCase()} ${readableShape?.toLowerCase()} roof made of ${readableMaterial?.toLowerCase()}, there is likely a solid potential for CO₂ savings by combining better insulation and on-site renewable energy solutions. A tailored concept could estimate your annual energy demand, possible PV yield and related CO₂ reductions for this specific configuration.`;
 
     setError("");
     setResult(suggestion);
   };
 
-  const resetSelections = () => {
-    setCountry("");
-    setRoofType("");
-    setWallType("");
+  const resetForm = () => {
+    setSpaceType("");
+    setRoofMaterial("");
+    setRoofShape("");
+    setRoofPitch("");
     setResult("");
     setError("");
   };
 
   const scrollToForm = () => {
     const el = document.getElementById("configurator");
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
+    if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
-  const scrollToIntro = () => {
-    const el = document.getElementById("intro");
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
+  const scrollToWelcome = () => {
+    const el = document.getElementById("welcome");
+    if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -70,11 +105,10 @@ function App() {
       {/* HERO SECTION */}
       <header className="relative h-[70vh] w-full overflow-hidden">
         <img
-  src={heroImg}
-  alt="Building and rooftop"
-  className="h-full w-full object-cover"
-/>
-
+          src={heroImg}
+          alt="Building and rooftop"
+          className="h-full w-full object-cover"
+        />
 
         {/* overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
@@ -85,20 +119,15 @@ function App() {
             <span className="text-sm font-semibold tracking-wide text-white/90 uppercase">
               GROW
             </span>
-            <span className="text-xs md:text-sm text-white/80">
-              Iceland · Germany · Czechia
-            </span>
           </div>
 
           {/* Hero content */}
           <div className="px-6 md:px-10 pb-20 max-w-3xl">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white drop-shadow mb-4">
-              Plan your rooftop & wall combination with confidence.
+              Do you want to know how much CO₂ you could save?
             </h1>
             <p className="text-sm md:text-base text-white/85 max-w-xl mb-6">
-              Explore typical envelopes for different climates and get a quick
-              qualitative suggestion for energy performance, moisture and
-              structural behaviour.
+              Read further to find out!
             </p>
 
             <div className="flex flex-wrap items-center gap-3">
@@ -110,7 +139,7 @@ function App() {
                 Start configuration
               </button>
               <span className="text-xs md:text-sm text-white/80">
-                Scroll to discover more details & the form
+                Scroll to explore more details and get your tailored suggestion.
               </span>
             </div>
           </div>
@@ -120,7 +149,7 @@ function App() {
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1">
           <button
             type="button"
-            onClick={scrollToIntro}
+            onClick={scrollToWelcome}
             className="flex flex-col items-center text-white/80 hover:text-white focus:outline-none"
           >
             <span className="text-[10px] tracking-[0.25em] uppercase mb-1">
@@ -148,79 +177,27 @@ function App() {
 
       {/* CONTENT SECTIONS */}
       <main className="bg-gradient-to-b from-slate-50 via-slate-50 to-slate-100">
-        {/* How it works */}
+        {/* Welcome */}
         <section
-          id="intro"
-          className="px-6 md:px-10 lg:px-20 pt-12 md:pt-16 pb-8"
+          id="welcome"
+          className="px-6 md:px-10 lg:px-20 pt-12 md:pt-16 pb-10"
         >
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-xl md:text-2xl font-semibold mb-4">
-              How this tool works
-            </h2>
-            <p className="text-sm md:text-base text-slate-600 mb-8">
-              The configurator combines three simple inputs – country, roof
-              type and wall type – and returns a text-based suggestion. It
-              doesn&apos;t calculate exact U-values or structural loads, but it
-              gives a quick sense of what to watch out for in different
-              climates.
-            </p>
-
-            <div className="grid gap-4 md:grid-cols-3">
-              <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-                <h3 className="text-sm font-semibold mb-2 text-slate-800">
-                  1 · Choose your context
-                </h3>
-                <p className="text-xs md:text-sm text-slate-600">
-                  Start by selecting Iceland, Germany or Czechia to reflect the
-                  climatic and regulatory environment.
-                </p>
-              </div>
-              <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-                <h3 className="text-sm font-semibold mb-2 text-slate-800">
-                  2 · Define roof & wall
-                </h3>
-                <p className="text-xs md:text-sm text-slate-600">
-                  Pick a roof type and wall type to represent your envelope
-                  concept at a high level.
-                </p>
-              </div>
-              <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-                <h3 className="text-sm font-semibold mb-2 text-slate-800">
-                  3 · Read the suggestion
-                </h3>
-                <p className="text-xs md:text-sm text-slate-600">
-                  The tool generates a short explanation highlighting PV
-                  potential, insulation and durability aspects.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Long text */}
-        <section className="px-6 md:px-10 lg:px-20 pb-10 md:pb-14">
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-xl md:text-2xl font-semibold mb-3">
-              About this configurator
-            </h2>
+            <h2 className="text-xl md:text-2xl font-semibold mb-3">Welcome</h2>
             <p className="text-sm md:text-base leading-relaxed text-slate-700 mb-3">
-              This simple tool helps you explore different building envelope
-              configurations for three countries: Iceland, Germany and Czechia.
-              By combining country, roof type and wall type, you get a short
-              qualitative suggestion that focuses on aspects like insulation, PV
-              feasibility, wind loads and moisture protection.
-            </p>
-            <p className="text-sm md:text-base leading-relaxed text-slate-700 mb-3">
-              In a real project, this could be extended with more detailed
-              parameters, like U-values, cost estimates, structural constraints
-              and climate-specific design guidelines. For now, it&apos;s a
-              lightweight way to compare a few typical combinations and see
-              which ones might make more sense for your use case.
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
+              vehicula, felis sed facilisis aliquam, magna justo viverra lorem,
+              non consectetur justo felis sed urna. Duis finibus erat at ex
+              molestie, nec tincidunt nibh placerat. Curabitur at metus vitae
+              purus rhoncus mattis non nec erat.
             </p>
             <p className="text-sm md:text-base leading-relaxed text-slate-700">
-              Scroll further down to use the form. After selecting your inputs,
-              you&apos;ll get a text suggestion that you can refine or replace
-              with your own engineering logic later on.
+              Phasellus commodo, justo eget rhoncus malesuada, lorem odio
+              volutpat magna, at hendrerit justo mi vitae est. Vivamus
+              malesuada, nibh ac malesuada pellentesque, enim elit iaculis
+              metus, in fermentum magna mauris non augue. Morbi tempor, leo non
+              egestas bibendum, velit urna tempus sapien, at tristique ipsum
+              lectus vitae lacus.
             </p>
           </div>
         </section>
@@ -230,123 +207,133 @@ function App() {
           id="configurator"
           className="px-6 md:px-10 lg:px-20 pb-16 md:pb-20"
         >
-          <div className="max-w-2xl mx-auto">
-            <div className="mb-6 text-center">
-              <h2 className="text-xl md:text-2xl font-semibold mb-2">
-                Configuration form
+          <div className="max-w-3xl mx-auto">
+            <div className="mb-6">
+              <h2 className="text-xl md:text-2xl font-semibold mb-3">
+                Personal recommendation configurator
               </h2>
-              <p className="text-sm md:text-base text-slate-500">
-                Choose a country, roof type and wall type, then click{" "}
-                <span className="font-medium">Show suggestion</span>.
+              <p className="text-sm md:text-base leading-relaxed text-slate-700">
+                Please fill out this form and we tailor a personal recommendation
+                suitable for you:
+                <br />
+                <br />
+                Type of your roof is an essential component that plays a
+                significant role. The roof protects the building from harsh
+                weather conditions, enhances its aesthetic appeal, and provides
+                insulation to keep the interior comfortable. There are various
+                types of roofs, each with its unique features and benefits. To
+                be able to recommend you the most suitable solution, please fill
+                in the following:
               </p>
             </div>
 
             <div className="rounded-3xl border border-slate-200 bg-white/90 shadow-lg backdrop-blur-sm p-6 md:p-8">
-              <form onSubmit={handleSubmit} className="space-y-5">
-                {/* Top grid */}
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* unused space */}
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1 uppercase tracking-wide">
+                    What type of unused space do you have?
+                  </label>
+                  <select
+                    value={spaceType}
+                    onChange={(e) => {
+                      setSpaceType(e.target.value);
+                      setResult("");
+                      setError("");
+                    }}
+                    className="block w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                  >
+                    <option value="">Select a type of space</option>
+                    {spaceOptions.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* roof material */}
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1 uppercase tracking-wide">
+                    Roof material
+                  </label>
+                  <select
+                    value={roofMaterial}
+                    onChange={(e) => {
+                      setRoofMaterial(e.target.value);
+                      setResult("");
+                      setError("");
+                    }}
+                    className="block w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                  >
+                    <option value="">Select roof material</option>
+                    {materialOptions.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* roof shape + pitch */}
                 <div className="grid gap-4 md:grid-cols-2">
-                  {/* Country */}
-                  <div className="md:col-span-2">
+                  <div>
                     <label className="block text-xs font-semibold text-slate-700 mb-1 uppercase tracking-wide">
-                      Country
+                      Roof shape
                     </label>
                     <select
-                      value={country}
+                      value={roofShape}
                       onChange={(e) => {
-                        setCountry(e.target.value);
+                        setRoofShape(e.target.value);
                         setResult("");
                         setError("");
                       }}
                       className="block w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
                     >
-                      <option value="">Select a country</option>
-                      {countryOptions.map((c) => (
-                        <option key={c.value} value={c.value}>
-                          {c.label}
+                      <option value="">Select roof shape</option>
+                      {shapeOptions.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
                         </option>
                       ))}
                     </select>
                   </div>
 
-                  {/* Roof type */}
                   <div>
                     <label className="block text-xs font-semibold text-slate-700 mb-1 uppercase tracking-wide">
-                      Roof type
+                      Roof pitch
                     </label>
                     <select
-                      value={roofType}
+                      value={roofPitch}
                       onChange={(e) => {
-                        setRoofType(e.target.value);
+                        setRoofPitch(e.target.value);
                         setResult("");
                         setError("");
                       }}
-                      disabled={!country}
-                      className={`block w-full rounded-xl border px-3 py-2.5 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 ${
-                        !country
-                          ? "bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed"
-                          : "bg-white border-slate-300"
-                      }`}
+                      className="block w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
                     >
-                      <option value="">Select a roof type</option>
-                      {roofOptions.map((r) => (
-                        <option key={r.value} value={r.value}>
-                          {r.label}
+                      <option value="">Select roof pitch</option>
+                      {pitchOptions.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
                         </option>
                       ))}
                     </select>
-                    {!country && (
-                      <p className="mt-1 text-xs text-slate-400">
-                        Select a country first.
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Wall type */}
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1 uppercase tracking-wide">
-                      Wall type
-                    </label>
-                    <select
-                      value={wallType}
-                      onChange={(e) => {
-                        setWallType(e.target.value);
-                        setResult("");
-                        setError("");
-                      }}
-                      disabled={!roofType}
-                      className={`block w-full rounded-xl border px-3 py-2.5 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 ${
-                        !roofType
-                          ? "bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed"
-                          : "bg-white border-slate-300"
-                      }`}
-                    >
-                      <option value="">Select a wall type</option>
-                      {wallOptions.map((w) => (
-                        <option key={w.value} value={w.value}>
-                          {w.label}
-                        </option>
-                      ))}
-                    </select>
-                    {!roofType && (
-                      <p className="mt-1 text-xs text-slate-400">
-                        Select a roof type first.
-                      </p>
-                    )}
                   </div>
                 </div>
 
-                {/* Buttons */}
+                {/* buttons */}
                 <div className="flex flex-wrap items-center gap-3 pt-1">
                   <button
                     type="submit"
                     className="inline-flex items-center justify-center rounded-full bg-sky-600 px-5 py-2.5 text-sm md:text-base font-semibold text-white shadow-sm hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-1 disabled:opacity-60 disabled:cursor-not-allowed"
-                    disabled={!country || !roofType || !wallType}
+                    disabled={!spaceType || !roofMaterial || !roofShape || !roofPitch}
                   >
-                    Show suggestion
+                    Send
                   </button>
                   <button
                     type="button"
-                    onClick={resetSelections}
+                    onClick={resetForm}
                     className="text-sm md:text-base text-slate-500 hover:text-slate-700"
                   >
                     Reset
@@ -365,7 +352,7 @@ function App() {
                 {result && !error && (
                   <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3">
                     <h3 className="text-sm font-semibold text-emerald-800 mb-1">
-                      Suggestion
+                      Your tailored suggestion
                     </h3>
                     <p className="text-sm text-emerald-900 leading-relaxed">
                       {result}
@@ -374,12 +361,40 @@ function App() {
                 )}
               </div>
             </div>
+          </div>
+        </section>
 
-            {/* small footer */}
-            <p className="mt-6 text-center text-xs text-slate-400">
-              Demo tool – replace the text logic with your own engineering
-              model later.
+        {/* NEWS SECTION */}
+        <section className="px-6 md:px-10 lg:px-20 pb-16 md:pb-20">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-xl md:text-2xl font-semibold mb-4">
+              Climate & energy news
+            </h2>
+            <p className="text-sm md:text-base text-slate-600 mb-6">
+              Stay up to date with developments that shape the context for your
+              building&apos;s decarbonisation potential.
             </p>
+
+            <div className="grid gap-4 md:grid-cols-3">
+              {newsItems.map((item, idx) => (
+                <article
+                  key={idx}
+                  className="rounded-2xl border border-slate-200 bg-white shadow-sm p-4 flex flex-col justify-between"
+                >
+                  <div>
+                    <h3 className="text-sm font-semibold text-slate-900 mb-2">
+                      {item.title}
+                    </h3>
+                    <p className="text-xs md:text-sm text-slate-600 mb-3">
+                      {item.summary}
+                    </p>
+                  </div>
+                  <p className="text-[11px] uppercase tracking-wide text-slate-400">
+                    {item.source}
+                  </p>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
       </main>
