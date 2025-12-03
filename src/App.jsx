@@ -1,6 +1,15 @@
 // src/App.jsx
 import { useState } from "react";
 import heroImg from "./assets/hero-building.jpeg";
+import news1 from "./assets/news1.jpg";
+import news2 from "./assets/news2.jpg";
+import news3 from "./assets/news3.jpg";
+
+const countryOptions = [
+  { value: "iceland", label: "Iceland" },
+  { value: "germany", label: "Germany" },
+  { value: "czech", label: "Czechia" },
+];
 
 const spaceOptions = [
   { value: "roof", label: "Roof" },
@@ -30,28 +39,42 @@ const pitchOptions = [
   { value: "steep", label: "Steep" },
 ];
 
+const countryContext = {
+  iceland:
+    "In Iceland, harsh winds and cold temperatures make robust insulation and wind-resistant detailing especially important.",
+  germany:
+    "In Germany, efficiency standards and support schemes can strongly support high-performance envelopes and on-site renewables.",
+  czech:
+    "In Czechia, a mix of continental climate and existing building stock creates good potential for retrofit and PV integration.",
+};
+
 const newsItems = [
   {
     title: "Cities push for rooftop solar to cut CO₂ emissions",
     summary:
       "Several European cities are expanding incentives for solar installations on existing roofs to accelerate decarbonisation.",
     source: "Energy Today",
+    img: news1,
   },
   {
     title: "Green roofs improve urban climate resilience",
     summary:
       "New studies show that green roofs help reduce heat islands and manage stormwater in dense city districts.",
     source: "Climate Insights",
+    img: news2,
   },
   {
     title: "Home retrofits become key in reaching 2030 targets",
     summary:
       "Policy makers highlight building envelopes and unused spaces as a major lever for CO₂ savings in the residential sector.",
     source: "Sustainable Future",
+    img: news3,
   },
 ];
 
+
 function App() {
+  const [country, setCountry] = useState("");
   const [spaceType, setSpaceType] = useState("");
   const [roofMaterial, setRoofMaterial] = useState("");
   const [roofShape, setRoofShape] = useState("");
@@ -62,12 +85,13 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!spaceType || !roofMaterial || !roofShape || !roofPitch) {
+    if (!country || !spaceType || !roofMaterial || !roofShape || !roofPitch) {
       setResult("");
       setError("Please fill in all fields before sending.");
       return;
     }
 
+    const readableCountry = countryOptions.find((o) => o.value === country)?.label;
     const readableSpace = spaceOptions.find((o) => o.value === spaceType)?.label;
     const readableMaterial = materialOptions.find(
       (o) => o.value === roofMaterial
@@ -75,13 +99,18 @@ function App() {
     const readableShape = shapeOptions.find((o) => o.value === roofShape)?.label;
     const readablePitch = pitchOptions.find((o) => o.value === roofPitch)?.label;
 
-    const suggestion = `Based on your ${readableSpace?.toLowerCase()} with a ${readablePitch?.toLowerCase()} ${readableShape?.toLowerCase()} roof made of ${readableMaterial?.toLowerCase()}, there is likely a solid potential for CO₂ savings by combining better insulation and on-site renewable energy solutions. A tailored concept could estimate your annual energy demand, possible PV yield and related CO₂ reductions for this specific configuration.`;
+    const climateNote =
+      countryContext[country] ??
+      "Local climate and policy conditions will further shape the exact CO₂ savings potential.";
+
+    const suggestion = `For your location in ${readableCountry}, based on your ${readableSpace?.toLowerCase()} with a ${readablePitch?.toLowerCase()} ${readableShape?.toLowerCase()} roof made of ${readableMaterial?.toLowerCase()}, there is likely a solid potential for CO₂ savings by combining envelope improvements and on-site renewable energy solutions. ${climateNote} A tailored concept could estimate your annual energy demand, possible PV yield and related CO₂ reductions for this specific configuration.`;
 
     setError("");
     setResult(suggestion);
   };
 
   const resetForm = () => {
+    setCountry("");
     setSpaceType("");
     setRoofMaterial("");
     setRoofShape("");
@@ -229,6 +258,29 @@ function App() {
 
             <div className="rounded-3xl border border-slate-200 bg-white/90 shadow-lg backdrop-blur-sm p-6 md:p-8">
               <form onSubmit={handleSubmit} className="space-y-6">
+                {/* country */}
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1 uppercase tracking-wide">
+                    Country
+                  </label>
+                  <select
+                    value={country}
+                    onChange={(e) => {
+                      setCountry(e.target.value);
+                      setResult("");
+                      setError("");
+                    }}
+                    className="block w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                  >
+                    <option value="">Select your country</option>
+                    {countryOptions.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
                 {/* unused space */}
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1 uppercase tracking-wide">
@@ -327,7 +379,13 @@ function App() {
                   <button
                     type="submit"
                     className="inline-flex items-center justify-center rounded-full bg-sky-600 px-5 py-2.5 text-sm md:text-base font-semibold text-white shadow-sm hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-1 disabled:opacity-60 disabled:cursor-not-allowed"
-                    disabled={!spaceType || !roofMaterial || !roofShape || !roofPitch}
+                    disabled={
+                      !country ||
+                      !spaceType ||
+                      !roofMaterial ||
+                      !roofShape ||
+                      !roofPitch
+                    }
                   >
                     Send
                   </button>
@@ -365,38 +423,102 @@ function App() {
         </section>
 
         {/* NEWS SECTION */}
-        <section className="px-6 md:px-10 lg:px-20 pb-16 md:pb-20">
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-xl md:text-2xl font-semibold mb-4">
-              Climate & energy news
-            </h2>
-            <p className="text-sm md:text-base text-slate-600 mb-6">
-              Stay up to date with developments that shape the context for your
-              building&apos;s decarbonisation potential.
-            </p>
+<section className="relative px-6 md:px-10 lg:px-20 pb-20">
+  <div className="max-w-6xl mx-auto">
+    <h2 className="text-xl md:text-2xl font-semibold mb-4">
+      Climate & energy news
+    </h2>
+    <p className="text-sm md:text-base text-slate-600 mb-6">
+      Stay up to date with developments that shape the context for your
+      building's decarbonisation potential.
+    </p>
 
-            <div className="grid gap-4 md:grid-cols-3">
-              {newsItems.map((item, idx) => (
-                <article
-                  key={idx}
-                  className="rounded-2xl border border-slate-200 bg-white shadow-sm p-4 flex flex-col justify-between"
-                >
-                  <div>
-                    <h3 className="text-sm font-semibold text-slate-900 mb-2">
-                      {item.title}
-                    </h3>
-                    <p className="text-xs md:text-sm text-slate-600 mb-3">
-                      {item.summary}
-                    </p>
-                  </div>
-                  <p className="text-[11px] uppercase tracking-wide text-slate-400">
-                    {item.source}
-                  </p>
-                </article>
-              ))}
+    {/* Wrapper for scroll + arrows */}
+    <div className="relative">
+      {/* LEFT ARROW */}
+      <button
+        onClick={() => {
+          const el = document.getElementById("news-scroll");
+          el.scrollBy({ left: -400, behavior: "smooth" });
+        }}
+        className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 
+                   z-20 bg-white/80 backdrop-blur-md shadow-lg 
+                   rounded-full p-3 hover:bg-white transition"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" 
+             fill="none" viewBox="0 0 24 24" 
+             strokeWidth="1.5" stroke="currentColor" 
+             className="w-6 h-6 text-slate-700">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.5L7.5 12L15 4.5" />
+        </svg>
+      </button>
+
+      {/* RIGHT ARROW */}
+      <button
+        onClick={() => {
+          const el = document.getElementById("news-scroll");
+          el.scrollBy({ left: 400, behavior: "smooth" });
+        }}
+        className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 
+                   z-20 bg-white/80 backdrop-blur-md shadow-lg 
+                   rounded-full p-3 hover:bg-white transition"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" 
+             fill="none" viewBox="0 0 24 24" 
+             strokeWidth="1.5" stroke="currentColor" 
+             className="w-6 h-6 text-slate-700">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 4.5L16.5 12L9 19.5" />
+        </svg>
+      </button>
+
+      {/* SCROLLABLE NEWS CAROUSEL */}
+      <div
+        id="news-scroll"
+        className="flex gap-6 overflow-x-auto pb-6 snap-x snap-mandatory scrollbar-hide scroll-smooth"
+      >
+        {newsItems.map((item, idx) => (
+          <article
+            key={idx}
+            className="
+              snap-center
+              flex-shrink-0
+              w-[85%] md:w-[60%] lg:w-[50%]
+              rounded-3xl overflow-hidden shadow-xl 
+              bg-white border border-slate-200
+            "
+          >
+            {/* IMAGE */}
+            <div className="h-48 md:h-56 lg:h-64 w-full overflow-hidden">
+              <img
+                src={item.img}
+                alt={item.title}
+                className="h-full w-full object-cover"
+              />
             </div>
-          </div>
-        </section>
+
+            {/* TEXT */}
+            <div className="p-6 flex flex-col justify-between h-[240px] md:h-[220px]">
+              <div>
+                <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                  {item.title}
+                </h3>
+                <p className="text-sm text-slate-600">{item.summary}</p>
+              </div>
+
+              <p className="text-[11px] uppercase tracking-wide text-slate-400 mt-4">
+                {item.source}
+              </p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
       </main>
     </div>
   );
