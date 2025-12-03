@@ -4,6 +4,8 @@ import heroImg from "./assets/hero-building.jpeg";
 import news1 from "./assets/news1.jpg";
 import news2 from "./assets/news2.jpg";
 import news3 from "./assets/news3.jpg";
+import logo from "./assets/logo.png";
+
 
 const countryOptions = [
   { value: "iceland", label: "Iceland" },
@@ -144,11 +146,19 @@ function App() {
 
         <div className="absolute inset-0 flex flex-col justify-between">
           {/* Top bar */}
-          <div className="flex items-center justify-between px-6 md:px-10 pt-4">
-            <span className="text-sm font-semibold tracking-wide text-white/90 uppercase">
-              GROW
-            </span>
-          </div>
+<div className="flex items-center justify-between px-6 md:px-10 pt-4">
+  <div className="flex items-center gap-2">
+    <img
+      src={logo}
+      alt="GROW logo"
+      className="h-8 w-8 rounded-full bg-white/80 p-1 object-contain"
+    />
+    <span className="text-sm font-semibold tracking-wide text-white/90 uppercase">
+      GROW
+    </span>
+  </div>
+</div>
+
 
           {/* Hero content */}
           <div className="px-6 md:px-10 pb-20 max-w-3xl">
