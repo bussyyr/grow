@@ -1,6 +1,7 @@
 // src/App.jsx
 import { useState } from "react";
 import { suggestionData } from "./data";
+import heroImg from "./assets/hero-building.jpeg";
 
 const countryOptions = [
   { value: "germany", label: "Germany" },
@@ -69,10 +70,11 @@ function App() {
       {/* HERO SECTION */}
       <header className="relative h-[70vh] w-full overflow-hidden">
         <img
-          src="/hero-building.jpeg"
-          alt="Building and rooftop"
-          className="h-full w-full object-cover"
-        />
+  src={heroImg}
+  alt="Building and rooftop"
+  className="h-full w-full object-cover"
+/>
+
 
         {/* overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
